@@ -3,21 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Art Exam - 100 Point Quiz</title>
+<title>Art Reviewer & Exam</title>
 <style>
-:root{--primary:#1a1a2e;--accent:#e74c3c;--accent2:#8e44ad;--gold:#f39c12;--bg:#f5f3ff;--card:#fff;--text:#1a1a2e;--muted:#6c757d;--border:#e2e0ef;--success:#27ae60;--info:#3498db;--shadow:0 2px 16px rgba(45,27,105,.08);--radius:14px}
+:root{--primary:#2d1b69;--accent:#e74c3c;--accent2:#8e44ad;--gold:#f39c12;--bg:#f5f3ff;--card:#fff;--text:#1a1a2e;--muted:#6c757d;--border:#e2e0ef;--success:#27ae60;--info:#3498db;--shadow:0 2px 16px rgba(45,27,105,.08);--radius:14px}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
-header{background:linear-gradient(135deg,var(--primary) 0%,var(--accent2) 50%,var(--accent) 100%);color:#fff;text-align:center;padding:2rem 1rem 1.5rem;position:sticky;top:0;z-index:100;box-shadow:0 4px 24px rgba(45,27,105,.25)}
-header h1{font-size:1.6rem;font-weight:800}
-header p{opacity:.85;font-size:.88rem;margin-top:.2rem}
-.scoreboard{display:flex;justify-content:center;gap:1rem;margin-top:.8rem;flex-wrap:wrap}
-.score-item{background:rgba(255,255,255,.15);padding:.35rem .8rem;border-radius:20px;font-size:.75rem;font-weight:700;border:1px solid rgba(255,255,255,.2)}
-.score-item span{color:var(--gold);font-size:.95rem}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;scroll-behavior:smooth}
+header{background:linear-gradient(135deg,var(--primary) 0%,var(--accent2) 50%,var(--accent) 100%);color:#fff;text-align:center;padding:2.5rem 1rem 2rem;position:sticky;top:0;z-index:100;box-shadow:0 4px 24px rgba(45,27,105,.25)}
+header h1{font-size:1.8rem;font-weight:800;letter-spacing:-.5px}
+header p{opacity:.85;font-size:.92rem;margin-top:.2rem}
+nav{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin-top:.8rem}
+nav a{color:#fff;text-decoration:none;padding:.3rem .65rem;border-radius:20px;font-size:.7rem;font-weight:600;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);transition:all .25s}
+nav a:hover,nav a.active{background:var(--gold);border-color:var(--gold);color:var(--primary);transform:translateY(-1px)}
 .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:200;transition:width .15s;width:0}
-main{max-width:860px;margin:0 auto;padding:1.5rem 1rem 4rem}
+main{max-width:900px;margin:0 auto;padding:1.5rem 1rem 4rem}
+.controls{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+.ctrl-btn{padding:.4rem .9rem;border:2px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer;font-size:.78rem;font-weight:600;color:var(--primary);transition:all .2s}
+.ctrl-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+.section{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden;border:1px solid var(--border);transition:box-shadow .3s}
+.section:hover{box-shadow:0 8px 30px rgba(45,27,105,.15)}
+.section-header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;cursor:pointer;user-select:none;transition:background .2s}
+.section-header:hover{background:#faf9ff}
+.section-header h2{font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
+.icon-badge{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.chevron{width:18px;height:18px;transition:transform .3s;opacity:.35}
+.section.open .chevron{transform:rotate(180deg)}
+.section-body{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.section.open .section-body{max-height:4000px}
+.section-content{padding:0 1.2rem 1.2rem}
+.intro-text{font-size:.9rem;color:var(--muted);border-left:3px solid var(--accent);padding-left:1rem;margin-bottom:.8rem;font-style:italic}
+h3{font-size:.95rem;font-weight:700;margin:1rem 0 .5rem;color:var(--accent2)}
+p,li{font-size:.88rem;line-height:1.7}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin-bottom:.25rem}
+.highlight{background:linear-gradient(120deg,#fff3cd,#fff3cd);padding:.1rem .35rem;border-radius:4px;font-weight:600}
+.card{background:#f8f7fc;border-radius:10px;padding:.9rem 1rem;margin:.5rem 0;border:1px solid var(--border);transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.card-title{font-weight:700;font-size:.88rem;margin-bottom:.25rem;color:var(--accent2)}
+table{width:100%;border-collapse:collapse;margin:.7rem 0;font-size:.83rem}
+thead th{background:var(--primary);color:#fff;padding:.55rem .7rem;text-align:left;font-weight:600;font-size:.8rem}
+tbody td{padding:.5rem .7rem;border-bottom:1px solid var(--border);vertical-align:top}
+tbody tr:hover{background:#f5f3ff}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.badge{display:inline-block;padding:.12rem .45rem;border-radius:12px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.badge-red{background:#fde8ec;color:var(--accent)}
+.badge-purple{background:#f0e6ff;color:var(--accent2)}
+.badge-green{background:#e6f5ea;color:var(--success)}
+.badge-gold{background:#fef5e7;color:#d68910}
+.movement-card{background:linear-gradient(135deg,#f8f7fc,#fff);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;margin:.4rem 0;border-left:4px solid var(--accent2);transition:transform .2s}
+.movement-card:hover{transform:translateX(4px)}
+.movement-name{font-weight:800;color:var(--primary);font-size:.9rem}
+.movement-desc{font-size:.83rem;color:var(--muted);margin-top:.15rem}
+.era-label{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent2);margin:.8rem 0 .4rem;padding-bottom:.3rem;border-bottom:2px solid var(--accent2)}
+.tag-list{display:flex;flex-wrap:wrap;gap:.3rem;margin:.4rem 0}
+.tag{padding:.2rem .55rem;border-radius:6px;font-size:.75rem;font-weight:600;background:#f0e6ff;color:var(--accent2);border:1px solid #d9ccf0}
+.quiz-banner{background:linear-gradient(135deg,var(--primary),var(--accent2));border-radius:var(--radius);padding:2rem;text-align:center;margin:2rem 0;color:#fff}
+.quiz-banner h2{font-size:1.4rem;font-weight:800;margin-bottom:.5rem}
+.quiz-banner p{opacity:.85;font-size:.9rem;margin-bottom:1rem}
+.take-quiz-btn{display:inline-block;padding:.7rem 2.5rem;background:var(--gold);color:var(--primary);border:none;border-radius:10px;font-size:1rem;font-weight:800;cursor:pointer;transition:all .3s;box-shadow:0 4px 15px rgba(243,156,18,.4);text-decoration:none}
+.take-quiz-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(243,156,18,.5)}
+/* QUIZ STYLES */
 .part-header{background:linear-gradient(135deg,var(--primary),var(--accent2));color:#fff;padding:1rem 1.2rem;border-radius:var(--radius);margin-bottom:1rem;margin-top:1.5rem}
-.part-header:first-child{margin-top:0}
 .part-header h2{font-size:1.05rem;font-weight:800;display:flex;align-items:center;gap:.5rem}
 .part-header p{font-size:.82rem;opacity:.85;margin-top:.15rem}
 .points-badge{background:var(--gold);color:var(--primary);padding:.15rem .55rem;border-radius:12px;font-size:.72rem;font-weight:800}
@@ -78,31 +123,153 @@ footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.78rem}
 .back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:42px;height:42px;background:var(--accent);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:1.1rem;box-shadow:0 4px 15px rgba(231,76,60,.4);opacity:0;transition:all .3s;z-index:50}
 .back-to-top.visible{opacity:1}
 .back-to-top:hover{transform:translateY(-3px)}
-@media(max-width:600px){header h1{font-size:1.2rem}.scoreboard{gap:.5rem}.score-item{font-size:.68rem;padding:.3rem .6rem}.result-breakdown{grid-template-columns:1fr}}
+@media(max-width:600px){header h1{font-size:1.3rem}.grid-2{grid-template-columns:1fr}nav a{font-size:.62rem;padding:.25rem .5rem}.result-breakdown{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="progress-bar" id="progressBar"></div>
 <header>
-<h1>Art Examination</h1>
-<p>100-Point Quiz &mdash; Elements, Forms, Movements &amp; Abstraction</p>
-<div class="scoreboard">
-<div class="score-item">Part I: <span>40</span> pts</div>
-<div class="score-item">Part II: <span>20</span> pts</div>
-<div class="score-item">Part III: <span>20</span> pts</div>
-<div class="score-item">Part IV: <span>20</span> pts</div>
-<div class="score-item">Total: <span>100</span> pts</div>
-</div>
+<h1>Art Reviewer & Exam</h1>
+<p>Comprehensive Study Guide + 100-Point Examination</p>
+<nav id="nav">
+<a href="#sec1">Importance</a>
+<a href="#sec2">Elements</a>
+<a href="#sec3">Art Forms</a>
+<a href="#sec4">Techniques</a>
+<a href="#sec5">Movements</a>
+<a href="#sec6">Abstraction</a>
+<a href="#sec7">Modern vs Contemp.</a>
+<a href="#quizArea">Take a Quiz</a>
+</nav>
 </header>
 <main>
-<div class="part-header" id="part1"><h2>Part I: Multiple Choice <span class="points-badge">40 Points</span></h2><p>Choose the best answer. Each correct answer is 1 point.</p></div>
+<div class="controls">
+<button class="ctrl-btn" onclick="toggleAll(true)">Expand All</button>
+<button class="ctrl-btn" onclick="toggleAll(false)">Collapse All</button>
+</div>
+<!-- REVIEWER SECTIONS -->
+<div class="section open" id="sec1">
+<div class="section-header" onclick="toggleSection(this)">
+<h2><span class="icon-badge" style="background:#fde8ec;color:var(--accent);">🎨</span> Importance of Art</h2>
+<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+</div>
+<div class="section-body"><div class="section-content">
+<p class="intro-text">Art is a diverse range of human activities and the products of those activities, central to human life and culture.</p>
+<div class="grid-2">
+<div class="card"><div class="card-title">Personal Expression</div><p>Satisfies feelings, unleashes passion, and allows individuals to express their inner world.</p></div>
+<div class="card"><div class="card-title">Perspective</div><p>Challenges us to see the world differently and consider new viewpoints.</p></div>
+<div class="card"><div class="card-title">Truth</div><p>Reveals insights we may not have understood before, uncovering hidden realities.</p></div>
+<div class="card"><div class="card-title">Pleasure</div><p>Gives satisfaction and gratification to both the creator and the audience.</p></div>
+</div>
+</div></div>
+</div>
+<div class="section" id="sec2">
+<div class="section-header" onclick="toggleSection(this)">
+<h2><span class="icon-badge" style="background:#e6f5ea;color:var(--success);">🖌️</span> Elements of Art</h2>
+<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+</div>
+<div class="section-body"><div class="section-content">
+<p class="intro-text">The building blocks and tools artists use to create art.</p>
+<div class="grid-2">
+<div class="card"><div class="card-title">Color</div><p>Striking visual element that sets the mood and tone of an artwork.</p></div>
+<div class="card"><div class="card-title">Value</div><p>The lightness or darkness of a color; creates depth and contrast.</p></div>
+<div class="card"><div class="card-title">Texture</div><p>The tactile or visual surface quality of an artwork.</p></div>
+<div class="card"><div class="card-title">Space</div><p>The positive and negative voids within a composition.</p></div>
+<div class="card"><div class="card-title">Line</div><p>Vertical, horizontal, jagged, zig-zag; defines shapes and creates movement.</p></div>
+<div class="card"><div class="card-title">Shape & Form</div><p>Organic or geometric shapes; 2D (shape) vs 3D (form).</p></div>
+</div>
+</div></div>
+</div>
+<div class="section" id="sec3">
+<div class="section-header" onclick="toggleSection(this)">
+<h2><span class="icon-badge" style="background:#fef5e7;color:#d68910;">🏛️</span> Art Forms</h2>
+<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+</div>
+<div class="section-body"><div class="section-content">
+<div class="grid-2">
+<div class="card"><div class="card-title"><span class="badge badge-red">3D</span> Sculpture</div><p>Created from metal, wood, stone, clay, or glass.</p><div class="tag-list"><span class="tag">Metal</span><span class="tag">Wood</span><span class="tag">Stone</span><span class="tag">Clay</span><span class="tag">Glass</span></div></div>
+<div class="card"><div class="card-title"><span class="badge badge-gold">Structure</span> Architecture</div><p>Design and construction using wood, bamboo, bricks, and stone.</p><div class="tag-list"><span class="tag">Wood</span><span class="tag">Bamboo</span><span class="tag">Bricks</span><span class="tag">Stone</span></div></div>
+<div class="card"><div class="card-title"><span class="badge badge-purple">2D</span> Painting</div><p>Application of pigment to surfaces using various media.</p><div class="tag-list"><span class="tag">Watercolor</span><span class="tag">Oil</span><span class="tag">Tempera</span><span class="tag">Acrylic</span><span class="tag">Ink</span></div></div>
+<div class="card"><div class="card-title"><span class="badge badge-green">Process</span> Printmaking</div><p>Artistic production on paper, wood, and silkscreens. Associated with <strong>Manuel Rodriguez Sr.</strong></p><div class="tag-list"><span class="tag">Paper</span><span class="tag">Wood</span><span class="tag">Silkscreen</span></div></div>
+<div class="card" style="grid-column:1/-1"><div class="card-title"><span class="badge badge-red">Performance</span> Theater</div><p>Live performance combining stage design, acting, and script.</p><div class="tag-list"><span class="tag">Stage</span><span class="tag">Design</span><span class="tag">Performance</span><span class="tag">Script</span></div></div>
+</div>
+</div></div>
+</div>
+<div class="section" id="sec4">
+<div class="section-header" onclick="toggleSection(this)">
+<h2><span class="icon-badge" style="background:#e0f0ff;color:var(--info);">🛠️</span> Techniques</h2>
+<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+</div>
+<div class="section-body"><div class="section-content">
+<div class="grid-2">
+<div class="card"><div class="card-title">Traditional Techniques</div><ul><li><strong>Wood Carving</strong> - Shaping wood with cutting tools</li><li><strong>Silk Screen Printing</strong> - Pushing ink through mesh screens</li></ul></div>
+<div class="card"><div class="card-title">Contemporary Techniques</div><ul><li><strong>Collage / Decollage</strong> - Assembling or tearing materials</li><li><strong>Photography</strong> - Analogue &amp; digital capture</li><li><strong>Filmmaking</strong> - Traditional &amp; digital production</li><li><strong>Music Production</strong> - Recording and composing</li><li><strong>Industrial Design</strong> - Functional object creation</li><li><strong>Robotics</strong> - Art through automated machines</li></ul></div>
+</div>
+</div></div>
+</div>
+<div class="section" id="sec5">
+<div class="section-header" onclick="toggleSection(this)">
+<h2><span class="icon-badge" style="background:#f0e6ff;color:var(--accent2);">🖼️</span> Art Movements</h2>
+<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+</div>
+<div class="section-body"><div class="section-content">
+<div class="movement-card"><div class="movement-name">Fauvism</div><div class="movement-desc"><strong>"Wild Beasts"</strong> - Bright, bold colors and fierce brushwork. Rejected realistic color in favor of emotional expression.</div></div>
+<div class="movement-card"><div class="movement-name">Dadaism</div><div class="movement-desc">Embraced <strong>absurdity</strong> and irrationality. "Hobby-horse" reflects its playful, anti-art nature. A reaction to WWI.</div></div>
+<div class="movement-card"><div class="movement-name">Futurism</div><div class="movement-desc">Celebrated <strong>speed, technology, and modernity</strong>. Founded on <span class="highlight">Marinetti's Manifesto</span>.</div></div>
+<div class="movement-card"><div class="movement-name">Surrealism</div><div class="movement-desc"><strong>"Super-realism"</strong> - Making the ordinary extraordinary. Explored dreams and the unconscious.</div></div>
+<div class="movement-card"><div class="movement-name">Impressionism</div><div class="movement-desc">Focused on <strong>optical realism, light, and movement</strong>. Captured fleeting moments through visible brushstrokes.</div></div>
+</div></div>
+</div>
+<div class="section" id="sec6">
+<div class="section-header" onclick="toggleSection(this)">
+<h2><span class="icon-badge" style="background:#fde8ec;color:var(--accent);">🔹</span> Forms of Abstraction</h2>
+<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+</div>
+<div class="section-body"><div class="section-content">
+<div class="grid-2">
+<div class="card"><div class="card-title">Distortion</div><p>Altering proportions of forms to create expressive or unsettling effects.</p></div>
+<div class="card"><div class="card-title">Elongation</div><p>Stretching forms beyond natural proportions for stylistic emphasis.</p></div>
+<div class="card"><div class="card-title">Mangling</div><p>Mutilated, torn, or hacked forms - raw and fragmented expression.</p></div>
+<div class="card"><div class="card-title">Symbolism</div><p>Objects representing abstract ideas beyond their literal meaning.</p></div>
+</div>
+<div class="card" style="margin-top:.6rem"><div class="card-title">Cubism</div><p>Pioneered by <strong>Braque &amp; Picasso</strong>. Uses geometric shapes and multiple viewpoints simultaneously.</p></div>
+<div class="card"><div class="card-title">Abstract Expressionism</div><p>Post-<span class="highlight">WWII</span> movement centered in <strong>New York</strong>. Emotional force and spontaneous, large-scale works.</p></div>
+</div></div>
+</div>
+<div class="section" id="sec7">
+<div class="section-header" onclick="toggleSection(this)">
+<h2><span class="icon-badge" style="background:#fef5e7;color:#d68910;">🆚</span> Modern vs Contemporary Art</h2>
+<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+</div>
+<div class="section-body"><div class="section-content">
+<table>
+<thead><tr><th>Category</th><th>Modern Art</th><th>Contemporary Art</th></tr></thead>
+<tbody>
+<tr><td><strong>Time Frame</strong></td><td>1860s - 1970s</td><td>1970s - present</td></tr>
+<tr><td><strong>Focus</strong></td><td>Abstraction, form, color</td><td>Concept, diversity</td></tr>
+<tr><td><strong>Media</strong></td><td>Painting, sculpture</td><td>Video, installation, digital</td></tr>
+<tr><td><strong>Feeling</strong></td><td>Idealistic, personal</td><td>Skeptical, social commentary</td></tr>
+<tr><td><strong>Goal</strong></td><td>Innovation, originality</td><td>Make you think, interactivity</td></tr>
+</tbody>
+</table>
+</div></div>
+</div>
+<!-- QUIZ BANNER -->
+<div class="quiz-banner" id="quizArea">
+<h2>Ready to Test Your Knowledge?</h2>
+<p>40 Multiple Choice | 20 Modified True/False | 20 Identification | 4 Critiques = 100 Points</p>
+<a href="#quizStart" class="take-quiz-btn">Take the Exam</a>
+</div>
+<!-- QUIZ START -->
+<div id="quizStart"></div>
+<div class="part-header"><h2>Part I: Multiple Choice <span class="points-badge">40 Points</span></h2><p>Choose the best answer. Each correct answer is 1 point.</p></div>
 <div id="mc-container"></div>
-<div class="part-header" id="part2"><h2>Part II: Modified True or False <span class="points-badge">20 Points</span></h2><p>TRUE if correct. If FALSE, write the correct word/phrase in the correction box.</p></div>
+<div class="part-header"><h2>Part II: Modified True or False <span class="points-badge">20 Points</span></h2><p>TRUE if correct. If FALSE, write the correct word/phrase in the correction box.</p></div>
 <div id="mtf-container"></div>
-<div class="part-header" id="part3"><h2>Part III: Identification <span class="points-badge">20 Points</span></h2><p>Identify the term being described. Use the word bank for hints.</p></div>
+<div class="part-header"><h2>Part III: Identification <span class="points-badge">20 Points</span></h2><p>Identify the term being described. Use the word bank for hints.</p></div>
 <div class="word-bank"><h3>Word Bank (Click a tag to autofill current input)</h3><div class="word-bank-tags" id="wordBank"></div></div>
 <div id="id-container"></div>
-<div class="part-header" id="part4"><h2>Part IV: Critique and Prove <span class="points-badge">20 Points</span></h2><p>Study each abstract artwork. Write a thoughtful critique analyzing elements, techniques, and emotional impact. 5 points each.</p></div>
+<div class="part-header"><h2>Part IV: Critique and Prove <span class="points-badge">20 Points</span></h2><p>Study each abstract artwork. Write a thoughtful critique analyzing elements, techniques, and emotional impact. 5 points each.</p></div>
 <div id="critique-container"></div>
 <div class="submit-area"><button class="submit-btn" onclick="submitQuiz()">Submit Exam</button></div>
 <div class="result-panel" id="resultPanel">
@@ -112,7 +279,7 @@ footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.78rem}
 <div class="result-breakdown" id="resultBreakdown"></div>
 </div>
 </main>
-<footer><p>Art Examination &mdash; 100 Point Quiz</p></footer>
+<footer><p>Art Reviewer &amp; Exam - Comprehensive Study Guide</p></footer>
 <button class="back-to-top" id="backToTop" title="Back to top">&#8593;</button>
 
 <script>
@@ -203,12 +370,15 @@ var idData=[
 {d:"Artistic production on paper, wood, and silkscreens.",h:"Printmaking"}
 ];
 var critiqueData=[
-{t:"Composition VIII",a:"Wassily Kandinsky, 1923",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Vassily_Kandinsky%2C_1923_-_Composition_8.jpg/800px-Vassily_Kandinsky%2C_1923_-_Composition_8.jpg",q:["What elements of art (color, line, shape, form, space, texture, value) do you observe? Describe how Kandinsky uses them.","What emotions does this artwork evoke? How do the colors and shapes contribute to this emotional impact?"]},
-{t:"Composition with Red, Blue, and Yellow",a:"Piet Mondrian, 1930",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Piet_Mondriaan%2C_1930_-_Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/800px-Piet_Mondriaan%2C_1930_-_Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg",q:["How does Mondrian use line, shape, and color? What is the effect of his limited color palette?","Critique the balance and harmony. How does the arrangement of geometric forms create order or tension?"]},
-{t:"Guernica",a:"Pablo Picasso, 1937",img:"https://upload.wikimedia.org/wikipedia/en/7/74/Guernica.jpg",q:["Identify the forms of abstraction used in this piece (distortion, elongation, mangling, cubism). How do they contribute to the message?","What is the emotional impact of this artwork? How does Picasso use composition to convey suffering and chaos?"]},
-{t:"No. 61 (Rust and Blue)",a:"Mark Rothko, 1953",img:"https://upload.wikimedia.org/wikipedia/en/5/5e/Mark_Rothko_-_No._61_%28Rust_and_Blue%29.jpg",q:["How does Rothko use color, space, and value in this abstract expressionist piece? What is the effect of the large color blocks?","What emotions or mood does this painting evoke? Why might abstract expressionism focus on emotional force over representation?"]}
+{t:"Composition VIII",a:"Wassily Kandinsky, 1923",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Vassily_Kandinsky%2C_1923_-_Composition_8.jpg/800px-Vassily_Kandinsky%2C_1923_-_Composition_8.jpg",q:["What elements of art do you observe? Describe how Kandinsky uses them.","What emotions does this artwork evoke? How do colors and shapes contribute?"]},
+{t:"Composition with Red, Blue, and Yellow",a:"Piet Mondrian, 1930",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Piet_Mondriaan%2C_1930_-_Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/800px-Piet_Mondriaan%2C_1930_-_Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg",q:["How does Mondrian use line, shape, and color? What is the effect of his limited palette?","Critique the balance and harmony. How do geometric forms create order or tension?"]},
+{t:"Guernica",a:"Pablo Picasso, 1937",img:"https://upload.wikimedia.org/wikipedia/en/7/74/Guernica.jpg",q:["Identify forms of abstraction (distortion, cubism, mangling). How do they contribute to the message?","What is the emotional impact? How does Picasso convey suffering and chaos?"]},
+{t:"No. 61 (Rust and Blue)",a:"Mark Rothko, 1953",img:"https://upload.wikimedia.org/wikipedia/en/5/5e/Mark_Rothko_-_No._61_%28Rust_and_Blue%29.jpg",q:["How does Rothko use color, space, and value? What is the effect of large color blocks?","What emotions does this evoke? Why does abstract expressionism focus on emotional force?"]}
 ];
-// ============ RENDER ============
+// ============ REVIEWER TOGGLES ============
+function toggleSection(h){h.closest('.section').classList.toggle('open');}
+function toggleAll(o){document.querySelectorAll('.section').forEach(function(s){if(o)s.classList.add('open');else s.classList.remove('open');});}
+// ============ RENDER QUIZ ============
 var activeInput=null;
 function renderMC(){
   var c=document.getElementById("mc-container"),h="";
@@ -220,10 +390,9 @@ function renderMC(){
   c.innerHTML=h;
 }
 function checkMC(i,v){
-  var card=document.getElementById("mc"+i);
-  var fb=document.getElementById("mcf"+i);
+  var card=document.getElementById("mc"+i),fb=document.getElementById("mcf"+i);
   if(v===mcData[i].a){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
-  else{fb.textContent="Incorrect. The correct answer is: "+mcData[i].o[mcData[i].a];fb.className="feedback wrong";card.className="question-card ans-wrong";}
+  else{fb.textContent="Incorrect. Correct: "+mcData[i].o[mcData[i].a];fb.className="feedback wrong";card.className="question-card ans-wrong";}
 }
 function renderMTF(){
   var c=document.getElementById("mtf-container"),h="";
@@ -237,29 +406,21 @@ function renderMTF(){
   c.innerHTML=h;
 }
 function pickTF(i,v){
-  var card=document.getElementById("mtf"+i);
-  var fb=document.getElementById("mtff"+i);
-  var cb=document.getElementById("mtfcb"+i);
-  var btnT=document.getElementById("mtT"+i);
-  var btnF=document.getElementById("mtF"+i);
+  var card=document.getElementById("mtf"+i),fb=document.getElementById("mtff"+i),cb=document.getElementById("mtfcb"+i);
+  var btnT=document.getElementById("mtT"+i),btnF=document.getElementById("mtF"+i);
   btnT.className="tf-btn";btnF.className="tf-btn";
   if(v===1){btnT.className="tf-btn selected";cb.className="correction-box";}
   else{btnF.className="tf-btn selected";cb.className="correction-box visible";}
   if(v===mtfData[i].a){
     if(v===1){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
-    else{
-      var inp=document.getElementById("mtfin"+i).value.trim().toLowerCase();
-      var corr=mtfData[i].c.toLowerCase();
-      if(inp===corr||corr.indexOf(inp)!==-1&&inp.length>2){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
-      else{fb.textContent="Incorrect. The correct answer is: "+mtfData[i].c;fb.className="feedback wrong";card.className="question-card ans-wrong";}
-    }
+    else{var inp=document.getElementById("mtfin"+i).value.trim().toLowerCase();var corr=mtfData[i].c.toLowerCase();
+      if(inp===corr||(corr.indexOf(inp)!==-1&&inp.length>2)){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
+      else{fb.textContent="Incorrect. Correct: "+mtfData[i].c;fb.className="feedback wrong";card.className="question-card ans-wrong";}}
   }else{
-    if(v===0){
-      var inp2=document.getElementById("mtfin"+i).value.trim().toLowerCase();
-      var corr2=mtfData[i].c.toLowerCase();
-      if(inp2===corr2||corr2.indexOf(inp2)!==-1&&inp2.length>2){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
-      else{fb.textContent="Incorrect. The correct answer is: "+mtfData[i].c;fb.className="feedback wrong";card.className="question-card ans-wrong";}
-    }else{fb.textContent="Incorrect. The statement is FALSE. Correct: "+mtfData[i].c;fb.className="feedback wrong";card.className="question-card ans-wrong";}
+    if(v===0){var inp2=document.getElementById("mtfin"+i).value.trim().toLowerCase();var corr2=mtfData[i].c.toLowerCase();
+      if(inp2===corr2||(corr2.indexOf(inp2)!==-1&&inp2.length>2)){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
+      else{fb.textContent="Incorrect. Correct: "+mtfData[i].c;fb.className="feedback wrong";card.className="question-card ans-wrong";}}
+    else{fb.textContent="Incorrect. FALSE. Correct: "+mtfData[i].c;fb.className="feedback wrong";card.className="question-card ans-wrong";}
   }
 }
 function renderID(){
@@ -272,85 +433,61 @@ function renderID(){
   c.innerHTML=h;
 }
 function checkID(i){
-  var v=document.getElementById("idin"+i).value.trim().toLowerCase();
-  var card=document.getElementById("id"+i);
-  var fb=document.getElementById("idf"+i);
+  var v=document.getElementById("idin"+i).value.trim().toLowerCase(),card=document.getElementById("id"+i),fb=document.getElementById("idf"+i);
   if(!v)return;
-  var correct=idData[i].h.toLowerCase();
-  if(v===correct){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
+  if(v===idData[i].h.toLowerCase()){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
   else{fb.textContent="Incorrect. Answer: "+idData[i].h;fb.className="feedback wrong";card.className="question-card ans-wrong";}
 }
 function renderWordBank(){
-  var c=document.getElementById("wordBank"),h="";
-  var words=[];
+  var c=document.getElementById("wordBank"),h="",words=[];
   idData.forEach(function(d){if(words.indexOf(d.h)===-1)words.push(d.h);});
-  words.forEach(function(w,i){
-    h+='<span class="wb-tag" onclick="useWB(this,\''+w.replace(/'/g,"\\'")+'\')">'+w+'</span>';
-  });
+  words.forEach(function(w){h+='<span class="wb-tag" onclick="useWB(this,\''+w.replace(/'/g,"\\'")+'\')">'+w+'</span>';});
   c.innerHTML=h;
 }
-function useWB(el,word){
-  if(activeInput){activeInput.value=word;activeInput.focus();}
-  el.classList.add("used");
-  setTimeout(function(){el.classList.remove("used");},1500);
-}
+function useWB(el,word){if(activeInput){activeInput.value=word;activeInput.focus();}el.classList.add("used");setTimeout(function(){el.classList.remove("used");},1500);}
 function renderCritique(){
   var c=document.getElementById("critique-container"),h="";
   critiqueData.forEach(function(d,i){
     h+='<div class="critique-card"><div class="critique-header"><h3>'+(i+1)+'. '+d.t+'</h3><div class="artist">'+d.a+'</div></div>';
-    h+='<div class="critique-img-wrap"><img src="'+d.img+'" alt="'+d.t+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=padding:2rem;color:#999>Image could not be loaded. Search: '+d.t+' by '+d.a+'</div>\'"></div>';
+    h+='<div class="critique-img-wrap"><img src="'+d.img+'" alt="'+d.t+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=padding:2rem;color:#999>Image unavailable. Search: '+d.t+' by '+d.a+'</div>\'"></div>';
     h+='<div class="critique-body">';
     d.q.forEach(function(q,j){h+='<label>Question '+(j+1)+':</label><textarea placeholder="Write your critique here..." id="crit'+i+'_'+j+'"></textarea>';});
-    h+='<div class="rubric-box"><h4>Rubric (5 pts each)</h4><ul><li>1 pt - Identifies elements of art present</li><li>1 pt - Describes technique or style used</li><li>1 pt - Analyzes composition and structure</li><li>1 pt - Discusses emotional or conceptual impact</li><li>1 pt - Uses proper art terminology</li></ul></div>';
-    h+='</div></div>';
+    h+='<div class="rubric-box"><h4>Rubric (5 pts each)</h4><ul><li>1 pt - Identifies elements of art present</li><li>1 pt - Describes technique or style used</li><li>1 pt - Analyzes composition and structure</li><li>1 pt - Discusses emotional or conceptual impact</li><li>1 pt - Uses proper art terminology</li></ul></div></div></div>';
   });
   c.innerHTML=h;
 }
-// ============ SUBMIT & SCORE ============
 function submitQuiz(){
-  var mcScore=0,mtfScore=0,idScore=0;
-  mcData.forEach(function(d,i){
-    var sel=document.querySelector('input[name="mc'+i+'"]:checked');
-    if(sel&&parseInt(sel.value)===d.a)mcScore++;
-  });
-  mtfData.forEach(function(d,i){
-    var card=document.getElementById("mtf"+i);
-    if(card.className.indexOf("ans-correct")!==-1)mtfScore++;
-  });
-  idData.forEach(function(d,i){
-    var card=document.getElementById("id"+i);
-    if(card.className.indexOf("ans-correct")!==-1)idScore++;
-  });
-  var autoTotal=mcScore+mtfScore+idScore;
-  var critiqueNote="(Self-graded using rubric: up to 20 pts)";
-  var total=autoTotal;
-  var panel=document.getElementById("resultPanel");
-  panel.className="result-panel visible";
-  document.getElementById("finalScore").textContent=autoTotal+" / 80 (Auto-graded)";
-  var pct=Math.round(autoTotal/80*100);
-  var remark="";
-  if(pct>=90)remark="Excellent! You have a strong grasp of Art concepts.";
-  else if(pct>=75)remark="Great job! Review the items you missed.";
-  else if(pct>=50)remark="Good effort. Study the review materials again.";
-  else remark="Keep studying! Review all sections carefully.";
-  document.getElementById("finalRemark").textContent=remark+" "+critiqueNote;
-  var bd=document.getElementById("resultBreakdown");
-  bd.innerHTML='<div class="rb-item"><div class="rb-label">Part I: Multiple Choice</div><div class="rb-score">'+mcScore+' / 40</div></div>'+
-    '<div class="rb-item"><div class="rb-label">Part II: Modified True/False</div><div class="rb-score">'+mtfScore+' / 20</div></div>'+
-    '<div class="rb-item"><div class="rb-label">Part III: Identification</div><div class="rb-score">'+idScore+' / 20</div></div>'+
+  var mcS=0,mtfS=0,idS=0;
+  mcData.forEach(function(d,i){var s=document.querySelector('input[name="mc'+i+'"]:checked');if(s&&parseInt(s.value)===d.a)mcS++;});
+  mtfData.forEach(function(d,i){if(document.getElementById("mtf"+i).className.indexOf("ans-correct")!==-1)mtfS++;});
+  idData.forEach(function(d,i){if(document.getElementById("id"+i).className.indexOf("ans-correct")!==-1)idS++;});
+  var auto=mcS+mtfS+idS;
+  var panel=document.getElementById("resultPanel");panel.className="result-panel visible";
+  document.getElementById("finalScore").textContent=auto+" / 80 (Auto-graded)";
+  var pct=Math.round(auto/80*100),r="";
+  if(pct>=90)r="Excellent! Strong grasp of Art concepts.";
+  else if(pct>=75)r="Great job! Review the items you missed.";
+  else if(pct>=50)r="Good effort. Study the review materials again.";
+  else r="Keep studying! Review all sections carefully.";
+  document.getElementById("finalRemark").textContent=r+" (Critique: self-graded, up to 20 pts)";
+  document.getElementById("resultBreakdown").innerHTML=
+    '<div class="rb-item"><div class="rb-label">Part I: Multiple Choice</div><div class="rb-score">'+mcS+' / 40</div></div>'+
+    '<div class="rb-item"><div class="rb-label">Part II: Modified True/False</div><div class="rb-score">'+mtfS+' / 20</div></div>'+
+    '<div class="rb-item"><div class="rb-label">Part III: Identification</div><div class="rb-score">'+idS+' / 20</div></div>'+
     '<div class="rb-item"><div class="rb-label">Part IV: Critique (self-grade)</div><div class="rb-score">Use rubric</div></div>';
   panel.scrollIntoView({behavior:"smooth"});
 }
 // ============ INIT ============
 renderMC();renderMTF();renderID();renderWordBank();renderCritique();
-var backToTop=document.getElementById("backToTop");
-var progressBar=document.getElementById("progressBar");
+var backToTop=document.getElementById("backToTop"),progressBar=document.getElementById("progressBar");
 window.addEventListener("scroll",function(){
-  var s=window.scrollY;
-  var d=document.documentElement.scrollHeight-window.innerHeight;
+  var s=window.scrollY,d=document.documentElement.scrollHeight-window.innerHeight;
   progressBar.style.width=(s/d*100)+"%";
   backToTop.className=s>400?"back-to-top visible":"back-to-top";
 });
 backToTop.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+var navLinks=document.querySelectorAll('#nav a');
+var observer=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){navLinks.forEach(function(l){l.classList.remove('active');});var link=document.querySelector('#nav a[href="#'+e.target.id+'"]');if(link)link.classList.add('active');}});},{threshold:0.3});
+document.querySelectorAll('.section[id]').forEach(function(sec){observer.observe(sec);});
 </script>
 </body></html>
