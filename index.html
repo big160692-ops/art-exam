@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Art Exam - 100 Point Quiz</title>
+<style>
+:root{--primary:#1a1a2e;--accent:#e74c3c;--accent2:#8e44ad;--gold:#f39c12;--bg:#f5f3ff;--card:#fff;--text:#1a1a2e;--muted:#6c757d;--border:#e2e0ef;--success:#27ae60;--info:#3498db;--shadow:0 2px 16px rgba(45,27,105,.08);--radius:14px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+header{background:linear-gradient(135deg,var(--primary) 0%,var(--accent2) 50%,var(--accent) 100%);color:#fff;text-align:center;padding:2rem 1rem 1.5rem;position:sticky;top:0;z-index:100;box-shadow:0 4px 24px rgba(45,27,105,.25)}
+header h1{font-size:1.6rem;font-weight:800}
+header p{opacity:.85;font-size:.88rem;margin-top:.2rem}
+.scoreboard{display:flex;justify-content:center;gap:1rem;margin-top:.8rem;flex-wrap:wrap}
+.score-item{background:rgba(255,255,255,.15);padding:.35rem .8rem;border-radius:20px;font-size:.75rem;font-weight:700;border:1px solid rgba(255,255,255,.2)}
+.score-item span{color:var(--gold);font-size:.95rem}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:200;transition:width .15s;width:0}
+main{max-width:860px;margin:0 auto;padding:1.5rem 1rem 4rem}
+.part-header{background:linear-gradient(135deg,var(--primary),var(--accent2));color:#fff;padding:1rem 1.2rem;border-radius:var(--radius);margin-bottom:1rem;margin-top:1.5rem}
+.part-header:first-child{margin-top:0}
+.part-header h2{font-size:1.05rem;font-weight:800;display:flex;align-items:center;gap:.5rem}
+.part-header p{font-size:.82rem;opacity:.85;margin-top:.15rem}
+.points-badge{background:var(--gold);color:var(--primary);padding:.15rem .55rem;border-radius:12px;font-size:.72rem;font-weight:800}
+.question-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:.7rem;overflow:hidden;border:1px solid var(--border);transition:border-color .3s}
+.question-card.ans-correct{border-color:var(--success)}
+.question-card.ans-wrong{border-color:var(--accent)}
+.q-header{display:flex;align-items:flex-start;gap:.6rem;padding:.85rem 1rem}
+.q-num{background:var(--primary);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;flex-shrink:0;margin-top:2px}
+.q-text{font-size:.86rem;font-weight:600;flex:1}
+.q-body{padding:0 1rem .85rem;padding-left:2.8rem}
+.options label{display:block;padding:.3rem .6rem;margin:.12rem 0;border-radius:8px;cursor:pointer;font-size:.82rem;transition:all .2s;border:1px solid transparent}
+.options label:hover{background:#f5f3ff}
+.options input[type="radio"]{margin-right:.4rem}
+.tf-buttons{display:flex;gap:.5rem;margin-bottom:.4rem}
+.tf-btn{padding:.35rem 1rem;border-radius:8px;border:2px solid var(--border);background:var(--card);cursor:pointer;font-size:.82rem;font-weight:700;transition:all .2s}
+.tf-btn:hover{border-color:var(--accent2)}
+.tf-btn.selected{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+.correction-box{display:none;margin-top:.4rem}
+.correction-box.visible{display:block}
+.correction-box input,.id-input{width:100%;padding:.45rem .7rem;border:2px solid var(--border);border-radius:8px;font-size:.84rem;outline:none;transition:border-color .2s}
+.correction-box input:focus,.id-input:focus{border-color:var(--accent2)}
+.feedback{margin-top:.3rem;padding:.3rem .6rem;border-radius:6px;font-size:.78rem;font-weight:600;display:none}
+.feedback.correct{display:block;background:#d4edda;color:#155724}
+.feedback.wrong{display:block;background:#f8d7da;color:#721c24}
+.word-bank{background:linear-gradient(135deg,#fef5e7,#fff);border:2px dashed var(--gold);border-radius:var(--radius);padding:1rem;margin-bottom:1rem}
+.word-bank h3{font-size:.88rem;font-weight:800;color:var(--primary);margin-bottom:.5rem}
+.word-bank-tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.wb-tag{padding:.2rem .6rem;border-radius:6px;font-size:.74rem;font-weight:600;background:var(--accent2);color:#fff;cursor:pointer;transition:all .2s;user-select:none}
+.wb-tag:hover{transform:scale(1.05)}
+.wb-tag.used{background:var(--success);opacity:.7}
+.critique-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden;border:1px solid var(--border)}
+.critique-header{padding:1rem 1.2rem;border-bottom:1px solid var(--border)}
+.critique-header h3{font-size:.95rem;font-weight:700;color:var(--primary);margin:0}
+.critique-header .artist{font-size:.82rem;color:var(--muted);margin-top:.1rem}
+.critique-img-wrap{width:100%;max-height:350px;overflow:hidden;background:#f0f0f0;display:flex;align-items:center;justify-content:center}
+.critique-img-wrap img{width:100%;max-height:350px;object-fit:contain;display:block}
+.critique-body{padding:1rem 1.2rem}
+.critique-body label{font-size:.84rem;font-weight:700;color:var(--accent2);display:block;margin-bottom:.3rem;margin-top:.6rem}
+.critique-body label:first-child{margin-top:0}
+.critique-body textarea{width:100%;min-height:65px;padding:.5rem .7rem;border:2px solid var(--border);border-radius:8px;font-family:inherit;font-size:.84rem;resize:vertical;outline:none;transition:border-color .2s;line-height:1.6}
+.critique-body textarea:focus{border-color:var(--accent2)}
+.rubric-box{background:#f8f7fc;border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;margin-top:.5rem;font-size:.76rem}
+.rubric-box h4{font-size:.8rem;font-weight:700;color:var(--primary);margin-bottom:.2rem}
+.rubric-box ul{padding-left:1.2rem}
+.rubric-box li{margin-bottom:.1rem;color:var(--muted);font-size:.76rem}
+.submit-area{text-align:center;margin-top:1.5rem}
+.submit-btn{padding:.7rem 2.5rem;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:800;cursor:pointer;transition:all .3s;box-shadow:0 4px 15px rgba(142,68,173,.4)}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(142,68,173,.5)}
+.result-panel{display:none;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem;margin-top:1.5rem;text-align:center;border:2px solid var(--accent2)}
+.result-panel.visible{display:block}
+.result-panel h2{font-size:1.3rem;color:var(--primary);margin-bottom:.5rem}
+.result-big{font-size:3rem;font-weight:900;color:var(--accent2);line-height:1;margin:.5rem 0}
+.result-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:1rem;text-align:left}
+.rb-item{background:#f8f7fc;padding:.6rem .8rem;border-radius:8px;border:1px solid var(--border);font-size:.82rem}
+.rb-item .rb-label{font-weight:600;color:var(--muted);font-size:.75rem}
+.rb-item .rb-score{font-weight:800;color:var(--primary);font-size:.95rem}
+footer{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.78rem}
+.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:42px;height:42px;background:var(--accent);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:1.1rem;box-shadow:0 4px 15px rgba(231,76,60,.4);opacity:0;transition:all .3s;z-index:50}
+.back-to-top.visible{opacity:1}
+.back-to-top:hover{transform:translateY(-3px)}
+@media(max-width:600px){header h1{font-size:1.2rem}.scoreboard{gap:.5rem}.score-item{font-size:.68rem;padding:.3rem .6rem}.result-breakdown{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<header>
+<h1>Art Examination</h1>
+<p>100-Point Quiz &mdash; Elements, Forms, Movements &amp; Abstraction</p>
+<div class="scoreboard">
+<div class="score-item">Part I: <span>40</span> pts</div>
+<div class="score-item">Part II: <span>20</span> pts</div>
+<div class="score-item">Part III: <span>20</span> pts</div>
+<div class="score-item">Part IV: <span>20</span> pts</div>
+<div class="score-item">Total: <span>100</span> pts</div>
+</div>
+</header>
+<main>
+<div class="part-header" id="part1"><h2>Part I: Multiple Choice <span class="points-badge">40 Points</span></h2><p>Choose the best answer. Each correct answer is 1 point.</p></div>
+<div id="mc-container"></div>
+<div class="part-header" id="part2"><h2>Part II: Modified True or False <span class="points-badge">20 Points</span></h2><p>TRUE if correct. If FALSE, write the correct word/phrase in the correction box.</p></div>
+<div id="mtf-container"></div>
+<div class="part-header" id="part3"><h2>Part III: Identification <span class="points-badge">20 Points</span></h2><p>Identify the term being described. Use the word bank for hints.</p></div>
+<div class="word-bank"><h3>Word Bank (Click a tag to autofill current input)</h3><div class="word-bank-tags" id="wordBank"></div></div>
+<div id="id-container"></div>
+<div class="part-header" id="part4"><h2>Part IV: Critique and Prove <span class="points-badge">20 Points</span></h2><p>Study each abstract artwork. Write a thoughtful critique analyzing elements, techniques, and emotional impact. 5 points each.</p></div>
+<div id="critique-container"></div>
+<div class="submit-area"><button class="submit-btn" onclick="submitQuiz()">Submit Exam</button></div>
+<div class="result-panel" id="resultPanel">
+<h2>Exam Results</h2>
+<div class="result-big" id="finalScore">0 / 100</div>
+<p id="finalRemark" style="font-size:.9rem;color:var(--muted);"></p>
+<div class="result-breakdown" id="resultBreakdown"></div>
+</div>
+</main>
+<footer><p>Art Examination &mdash; 100 Point Quiz</p></footer>
+<button class="back-to-top" id="backToTop" title="Back to top">&#8593;</button>
+
+<script>
+var mcData=[
+{q:"Which art movement is known as the 'Wild Beasts'?",o:["Dadaism","Futurism","Fauvism","Surrealism"],a:2},
+{q:"Cubism was pioneered by which two artists?",o:["Monet & Renoir","Braque & Picasso","Dali & Miro","Warhol & Lichtenstein"],a:1},
+{q:"What is the time frame generally accepted for Modern Art?",o:["1860s-1970s","1970s-present","1900s-1950s","1800s-1900s"],a:0},
+{q:"Who wrote the founding manifesto of Futurism?",o:["Picasso","Dali","Marinetti","Duchamp"],a:2},
+{q:"Which element of art refers to the lightness or darkness of a color?",o:["Color","Texture","Line","Value"],a:3},
+{q:"Abstract Expressionism was centered in which city after WWII?",o:["Paris","New York","London","Berlin"],a:1},
+{q:"Surrealism is best described as making the ordinary:",o:["Extraordinary","Boring","Abstract","Realistic"],a:0},
+{q:"Printmaking in the Philippines is associated with which artist?",o:["Amorsolo","Juan Luna","Manuel Rodriguez Sr.","Manansala"],a:2},
+{q:"Which art form is 3D and uses metal, wood, stone, clay, or glass?",o:["Painting","Sculpture","Printmaking","Architecture"],a:1},
+{q:"Dadaism was primarily a reaction to:",o:["Industrial Revolution","World War I","World War II","French Revolution"],a:1},
+{q:"Which element is the tactile or visual surface quality?",o:["Space","Value","Texture","Shape"],a:2},
+{q:"Impressionism focused on capturing:",o:["Dreams","Optical realism, light, movement","Geometric shapes","Social commentary"],a:1},
+{q:"Which contemporary technique involves assembling or tearing materials?",o:["Wood carving","Silk screen","Collage/Decollage","Robotics"],a:2},
+{q:"The term 'hobby-horse' is associated with:",o:["Fauvism","Dadaism","Futurism","Cubism"],a:1},
+{q:"Which painting medium uses water-soluble binder?",o:["Oil","Tempera","Watercolor","Acrylic"],a:2},
+{q:"Cubism uses which visual approach?",o:["Single vanishing point","Multiple viewpoints","Photorealism","Bold flat colors"],a:1},
+{q:"Which element involves vertical, horizontal, jagged, or zig-zag marks?",o:["Color","Line","Space","Value"],a:1},
+{q:"Contemporary Art is generally described as:",o:["Idealistic","Focused on form","Conceptual, diverse, interactive","Celebrating industrial progress"],a:2},
+{q:"Which is NOT an element of art?",o:["Color","Value","Fauvism","Space"],a:2},
+{q:"Architecture uses materials such as:",o:["Watercolor and ink","Wood, bamboo, bricks, stone","Silkscreens","Metal and glass only"],a:1},
+{q:"Distortion in abstraction means:",o:["Stretching forms","Altering proportions","Mutilating forms","Using symbols"],a:1},
+{q:"Which movement emphasized dynamism and industrial progress?",o:["Impressionism","Surrealism","Futurism","Dadaism"],a:2},
+{q:"Positive and negative voids in a composition refer to:",o:["Space","Shape","Form","Color"],a:0},
+{q:"Which is a traditional art technique?",o:["Photography","Robotics","Wood carving","Filmmaking"],a:2},
+{q:"Marcel Duchamp is associated with:",o:["Fauvism","Impressionism","Dadaism","Abstract Expressionism"],a:2},
+{q:"Elongation in abstraction means:",o:["Altering proportions","Stretching forms beyond natural proportions","Mutilating forms","Using geometric shapes"],a:1},
+{q:"Which art form combines stage design, acting, and script?",o:["Sculpture","Architecture","Theater","Printmaking"],a:2},
+{q:"Abstract Expressionism is characterized by:",o:["Geometric precision","Emotional force, spontaneous large-scale works","Optical realism","Absurdity"],a:1},
+{q:"Which technique involves pushing ink through mesh screens?",o:["Watercolor","Oil painting","Silk screen printing","Tempera"],a:2},
+{q:"Symbolism in abstraction means:",o:["Stretching forms","Objects representing abstract ideas","Mutilating forms","Altering proportions"],a:1},
+{q:"Contemporary art media includes all EXCEPT:",o:["Video","Installation","Oil painting only","Digital art"],a:2},
+{q:"Which element can be organic or geometric in 2D?",o:["Form","Shape","Space","Value"],a:1},
+{q:"Fauvism rejected realistic color in favor of:",o:["Geometric forms","Emotional expression","Photographic detail","Social commentary"],a:1},
+{q:"Mangling in abstraction is described as:",o:["Stretching forms","Altering proportions","Mutilated, torn, or hacked forms","Using symbols"],a:2},
+{q:"Surrealism explored:",o:["Industrial technology","Dreams, unconscious, unexpected juxtapositions","Geometric shapes","Optical realism"],a:1},
+{q:"Which art form applies pigment to surfaces?",o:["Sculpture","Painting","Architecture","Theater"],a:1},
+{q:"Modern Art's goal was primarily:",o:["Social commentary","Making you think","Innovation and originality","Interactivity"],a:2},
+{q:"Which element refers to 3D forms?",o:["Shape","Form","Line","Space"],a:1},
+{q:"Impressionism captured fleeting moments through:",o:["Geometric shapes","Visible brushstrokes","Mutilated forms","Digital tools"],a:1},
+{q:"Which is a contemporary art technique?",o:["Wood carving","Silk screen printing","Industrial design","Stone sculpting"],a:2}
+];
+var mtfData=[
+{s:"Fauvism is known as the 'Wild Beasts' art movement.",a:1,c:""},
+{s:"Cubism was pioneered by Monet and Renoir.",a:0,c:"Braque and Picasso"},
+{s:"Impressionism focused on optical realism, light, and movement.",a:1,c:""},
+{s:"Dadaism celebrated speed, technology, and modernity.",a:0,c:"Futurism"},
+{s:"Abstract Expressionism was centered in Paris after WWII.",a:0,c:"New York"},
+{s:"Surrealism is described as making the ordinary extraordinary.",a:1,c:""},
+{s:"Printmaking in the Philippines is associated with Manuel Rodriguez Sr.",a:1,c:""},
+{s:"Futurism was founded on Marinetti's Manifesto.",a:1,c:""},
+{s:"Value refers to the lightness or darkness of a color.",a:1,c:""},
+{s:"Cubism uses a single viewpoint to depict subjects.",a:0,c:"Multiple viewpoints"},
+{s:"Sculpture is a two-dimensional art form.",a:0,c:"Three-dimensional"},
+{s:"Collage and Decollage are traditional art techniques.",a:0,c:"Contemporary"},
+{s:"Dadaism was a reaction to World War I.",a:1,c:""},
+{s:"Watercolor is an oil-based painting medium.",a:0,c:"Water-based"},
+{s:"Elongation means stretching forms beyond natural proportions.",a:1,c:""},
+{s:"Symbolism uses objects to represent abstract ideas.",a:1,c:""},
+{s:"Mangling refers to altering proportions of forms.",a:0,c:"Mutilated, torn, or hacked forms"},
+{s:"Theater combines stage design, acting, and script.",a:1,c:""},
+{s:"Contemporary Art focuses mainly on form and color.",a:0,c:"Concept and diversity"},
+{s:"Distortion means altering proportions of forms.",a:1,c:""}
+];
+var idData=[
+{d:"The striking visual element that sets the mood and tone of an artwork.",h:"Color"},
+{d:"The lightness or darkness of a color; creates depth and contrast.",h:"Value"},
+{d:"The tactile or visual surface quality of an artwork.",h:"Texture"},
+{d:"The positive and negative voids within a composition.",h:"Space"},
+{d:"Marks that can be vertical, horizontal, jagged, or zig-zag.",h:"Line"},
+{d:"Organic or geometric forms; 2D vs 3D.",h:"Shape and Form"},
+{d:"An art movement known as 'Wild Beasts' with bold colors.",h:"Fauvism"},
+{d:"An art movement embracing absurdity, a reaction to WWI.",h:"Dadaism"},
+{d:"An art movement celebrating speed, technology, and Marinetti's manifesto.",h:"Futurism"},
+{d:"An art movement making the ordinary extraordinary through dreams.",h:"Surrealism"},
+{d:"An art movement focused on optical realism, light, and movement.",h:"Impressionism"},
+{d:"A form of abstraction pioneered by Braque and Picasso.",h:"Cubism"},
+{d:"A form of abstraction involving altered proportions.",h:"Distortion"},
+{d:"A form of abstraction involving stretched forms.",h:"Elongation"},
+{d:"A post-WWII movement centered in New York with emotional force.",h:"Abstract Expressionism"},
+{d:"Objects representing abstract ideas beyond their literal meaning.",h:"Symbolism"},
+{d:"A 3D art form using metal, wood, stone, clay, or glass.",h:"Sculpture"},
+{d:"Design and construction art form using wood, bamboo, bricks, stone.",h:"Architecture"},
+{d:"Application of pigment to surfaces using watercolor, oil, tempera, acrylic, or ink.",h:"Painting"},
+{d:"Artistic production on paper, wood, and silkscreens.",h:"Printmaking"}
+];
+var critiqueData=[
+{t:"Composition VIII",a:"Wassily Kandinsky, 1923",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Vassily_Kandinsky%2C_1923_-_Composition_8.jpg/800px-Vassily_Kandinsky%2C_1923_-_Composition_8.jpg",q:["What elements of art (color, line, shape, form, space, texture, value) do you observe? Describe how Kandinsky uses them.","What emotions does this artwork evoke? How do the colors and shapes contribute to this emotional impact?"]},
+{t:"Composition with Red, Blue, and Yellow",a:"Piet Mondrian, 1930",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Piet_Mondriaan%2C_1930_-_Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg/800px-Piet_Mondriaan%2C_1930_-_Mondrian_Composition_II_in_Red%2C_Blue%2C_and_Yellow.jpg",q:["How does Mondrian use line, shape, and color? What is the effect of his limited color palette?","Critique the balance and harmony. How does the arrangement of geometric forms create order or tension?"]},
+{t:"Guernica",a:"Pablo Picasso, 1937",img:"https://upload.wikimedia.org/wikipedia/en/7/74/Guernica.jpg",q:["Identify the forms of abstraction used in this piece (distortion, elongation, mangling, cubism). How do they contribute to the message?","What is the emotional impact of this artwork? How does Picasso use composition to convey suffering and chaos?"]},
+{t:"No. 61 (Rust and Blue)",a:"Mark Rothko, 1953",img:"https://upload.wikimedia.org/wikipedia/en/5/5e/Mark_Rothko_-_No._61_%28Rust_and_Blue%29.jpg",q:["How does Rothko use color, space, and value in this abstract expressionist piece? What is the effect of the large color blocks?","What emotions or mood does this painting evoke? Why might abstract expressionism focus on emotional force over representation?"]}
+];
+// ============ RENDER ============
+var activeInput=null;
+function renderMC(){
+  var c=document.getElementById("mc-container"),h="";
+  mcData.forEach(function(d,i){
+    h+='<div class="question-card" id="mc'+i+'"><div class="q-header"><div class="q-num">'+(i+1)+'</div><div class="q-text">'+d.q+'</div></div><div class="q-body"><div class="options">';
+    d.o.forEach(function(o,j){h+='<label><input type="radio" name="mc'+i+'" value="'+j+'" onchange="checkMC('+i+','+j+')"> '+o+'</label>';});
+    h+='</div><div class="feedback" id="mcf'+i+'"></div></div></div>';
+  });
+  c.innerHTML=h;
+}
+function checkMC(i,v){
+  var card=document.getElementById("mc"+i);
+  var fb=document.getElementById("mcf"+i);
+  if(v===mcData[i].a){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
+  else{fb.textContent="Incorrect. The correct answer is: "+mcData[i].o[mcData[i].a];fb.className="feedback wrong";card.className="question-card ans-wrong";}
+}
+function renderMTF(){
+  var c=document.getElementById("mtf-container"),h="";
+  mtfData.forEach(function(d,i){
+    h+='<div class="question-card" id="mtf'+i+'"><div class="q-header"><div class="q-num">'+(i+1)+'</div><div class="q-text">'+d.s+'</div></div><div class="q-body"><div class="tf-buttons">';
+    h+='<button class="tf-btn" id="mtT'+i+'" onclick="pickTF('+i+',1)">TRUE</button>';
+    h+='<button class="tf-btn" id="mtF'+i+'" onclick="pickTF('+i+',0)">FALSE</button>';
+    h+='</div><div class="correction-box" id="mtfcb'+i+'"><input type="text" placeholder="If FALSE, write the correct answer here..." id="mtfin'+i+'" onfocus="activeInput=this"></div>';
+    h+='<div class="feedback" id="mtff'+i+'"></div></div></div>';
+  });
+  c.innerHTML=h;
+}
+function pickTF(i,v){
+  var card=document.getElementById("mtf"+i);
+  var fb=document.getElementById("mtff"+i);
+  var cb=document.getElementById("mtfcb"+i);
+  var btnT=document.getElementById("mtT"+i);
+  var btnF=document.getElementById("mtF"+i);
+  btnT.className="tf-btn";btnF.className="tf-btn";
+  if(v===1){btnT.className="tf-btn selected";cb.className="correction-box";}
+  else{btnF.className="tf-btn selected";cb.className="correction-box visible";}
+  if(v===mtfData[i].a){
+    if(v===1){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
+    else{
+      var inp=document.getElementById("mtfin"+i).value.trim().toLowerCase();
+      var corr=mtfData[i].c.toLowerCase();
+      if(inp===corr||corr.indexOf(inp)!==-1&&inp.length>2){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
+      else{fb.textContent="Incorrect. The correct answer is: "+mtfData[i].c;fb.className="feedback wrong";card.className="question-card ans-wrong";}
+    }
+  }else{
+    if(v===0){
+      var inp2=document.getElementById("mtfin"+i).value.trim().toLowerCase();
+      var corr2=mtfData[i].c.toLowerCase();
+      if(inp2===corr2||corr2.indexOf(inp2)!==-1&&inp2.length>2){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
+      else{fb.textContent="Incorrect. The correct answer is: "+mtfData[i].c;fb.className="feedback wrong";card.className="question-card ans-wrong";}
+    }else{fb.textContent="Incorrect. The statement is FALSE. Correct: "+mtfData[i].c;fb.className="feedback wrong";card.className="question-card ans-wrong";}
+  }
+}
+function renderID(){
+  var c=document.getElementById("id-container"),h="";
+  idData.forEach(function(d,i){
+    h+='<div class="question-card" id="id'+i+'"><div class="q-header"><div class="q-num">'+(i+1)+'</div><div class="q-text">'+d.d+'</div></div><div class="q-body">';
+    h+='<input type="text" class="id-input" placeholder="Type your answer..." id="idin'+i+'" onfocus="activeInput=this" onblur="checkID('+i+')">';
+    h+='<div class="feedback" id="idf'+i+'"></div></div></div>';
+  });
+  c.innerHTML=h;
+}
+function checkID(i){
+  var v=document.getElementById("idin"+i).value.trim().toLowerCase();
+  var card=document.getElementById("id"+i);
+  var fb=document.getElementById("idf"+i);
+  if(!v)return;
+  var correct=idData[i].h.toLowerCase();
+  if(v===correct){fb.textContent="Correct! (+1)";fb.className="feedback correct";card.className="question-card ans-correct";}
+  else{fb.textContent="Incorrect. Answer: "+idData[i].h;fb.className="feedback wrong";card.className="question-card ans-wrong";}
+}
+function renderWordBank(){
+  var c=document.getElementById("wordBank"),h="";
+  var words=[];
+  idData.forEach(function(d){if(words.indexOf(d.h)===-1)words.push(d.h);});
+  words.forEach(function(w,i){
+    h+='<span class="wb-tag" onclick="useWB(this,\''+w.replace(/'/g,"\\'")+'\')">'+w+'</span>';
+  });
+  c.innerHTML=h;
+}
+function useWB(el,word){
+  if(activeInput){activeInput.value=word;activeInput.focus();}
+  el.classList.add("used");
+  setTimeout(function(){el.classList.remove("used");},1500);
+}
+function renderCritique(){
+  var c=document.getElementById("critique-container"),h="";
+  critiqueData.forEach(function(d,i){
+    h+='<div class="critique-card"><div class="critique-header"><h3>'+(i+1)+'. '+d.t+'</h3><div class="artist">'+d.a+'</div></div>';
+    h+='<div class="critique-img-wrap"><img src="'+d.img+'" alt="'+d.t+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=padding:2rem;color:#999>Image could not be loaded. Search: '+d.t+' by '+d.a+'</div>\'"></div>';
+    h+='<div class="critique-body">';
+    d.q.forEach(function(q,j){h+='<label>Question '+(j+1)+':</label><textarea placeholder="Write your critique here..." id="crit'+i+'_'+j+'"></textarea>';});
+    h+='<div class="rubric-box"><h4>Rubric (5 pts each)</h4><ul><li>1 pt - Identifies elements of art present</li><li>1 pt - Describes technique or style used</li><li>1 pt - Analyzes composition and structure</li><li>1 pt - Discusses emotional or conceptual impact</li><li>1 pt - Uses proper art terminology</li></ul></div>';
+    h+='</div></div>';
+  });
+  c.innerHTML=h;
+}
+// ============ SUBMIT & SCORE ============
+function submitQuiz(){
+  var mcScore=0,mtfScore=0,idScore=0;
+  mcData.forEach(function(d,i){
+    var sel=document.querySelector('input[name="mc'+i+'"]:checked');
+    if(sel&&parseInt(sel.value)===d.a)mcScore++;
+  });
+  mtfData.forEach(function(d,i){
+    var card=document.getElementById("mtf"+i);
+    if(card.className.indexOf("ans-correct")!==-1)mtfScore++;
+  });
+  idData.forEach(function(d,i){
+    var card=document.getElementById("id"+i);
+    if(card.className.indexOf("ans-correct")!==-1)idScore++;
+  });
+  var autoTotal=mcScore+mtfScore+idScore;
+  var critiqueNote="(Self-graded using rubric: up to 20 pts)";
+  var total=autoTotal;
+  var panel=document.getElementById("resultPanel");
+  panel.className="result-panel visible";
+  document.getElementById("finalScore").textContent=autoTotal+" / 80 (Auto-graded)";
+  var pct=Math.round(autoTotal/80*100);
+  var remark="";
+  if(pct>=90)remark="Excellent! You have a strong grasp of Art concepts.";
+  else if(pct>=75)remark="Great job! Review the items you missed.";
+  else if(pct>=50)remark="Good effort. Study the review materials again.";
+  else remark="Keep studying! Review all sections carefully.";
+  document.getElementById("finalRemark").textContent=remark+" "+critiqueNote;
+  var bd=document.getElementById("resultBreakdown");
+  bd.innerHTML='<div class="rb-item"><div class="rb-label">Part I: Multiple Choice</div><div class="rb-score">'+mcScore+' / 40</div></div>'+
+    '<div class="rb-item"><div class="rb-label">Part II: Modified True/False</div><div class="rb-score">'+mtfScore+' / 20</div></div>'+
+    '<div class="rb-item"><div class="rb-label">Part III: Identification</div><div class="rb-score">'+idScore+' / 20</div></div>'+
+    '<div class="rb-item"><div class="rb-label">Part IV: Critique (self-grade)</div><div class="rb-score">Use rubric</div></div>';
+  panel.scrollIntoView({behavior:"smooth"});
+}
+// ============ INIT ============
+renderMC();renderMTF();renderID();renderWordBank();renderCritique();
+var backToTop=document.getElementById("backToTop");
+var progressBar=document.getElementById("progressBar");
+window.addEventListener("scroll",function(){
+  var s=window.scrollY;
+  var d=document.documentElement.scrollHeight-window.innerHeight;
+  progressBar.style.width=(s/d*100)+"%";
+  backToTop.className=s>400?"back-to-top visible":"back-to-top";
+});
+backToTop.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+</script>
+</body></html>
